@@ -1,0 +1,17 @@
+helmDefaults:
+  wait: true
+  timeout: 600
+  createNamespace: true
+
+releases:
+  - name: ddm-language-server
+    namespace: language-server
+    chart: ./
+    labels:
+      type: local
+    values:
+      - "values.yaml"
+      - "values.gotmpl"
+      - image:
+          name: '{{ env "edpComponentDockerRegistryUrl" }}/{{ env "globalEDPProject" }}/ddm-language-server-master'
+          version: 1.9.2-SNAPSHOT.1

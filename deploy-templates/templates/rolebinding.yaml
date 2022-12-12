@@ -1,5 +1,3 @@
-{{ if .Values.framework }}
-{{ if eq .Values.framework "operator-sdk" }}
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
@@ -11,5 +9,3 @@ roleRef:
 subjects:
     - kind: ServiceAccount
       name: {{ include "ddm-language-server.serviceAccountName" . }}
-{{ end }}
-{{ end }}

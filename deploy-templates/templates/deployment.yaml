@@ -1,78 +1,52 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "ddm-language-server.fullname" . }}
+  name: {{ .Chart.Name }}
   labels:
-    {{- include "ddm-language-server.labels" . | nindent 4 }}
+    app: {{ .Chart.Name }}
 spec:
-{{- if not .Values.autoscaling.enabled }}
-  replicas: {{ .Values.replicaCount }}
-{{- end }}
   selector:
     matchLabels:
-      {{- include "ddm-language-server.selectorLabels" . | nindent 6 }}
+      app: {{ .Chart.Name }}
+  replicas: {{ .Values.replicaCount }}
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
   template:
     metadata:
-    {{- with .Values.podAnnotations }}
       annotations:
-        {{- toYaml . | nindent 8 }}
-    {{- end }}
+        sidecar.istio.io/inject: "false"
       labels:
-        {{- include "ddm-language-server.selectorLabels" . | nindent 8 }}
+        app: {{ .Chart.Name }}
     spec:
-      {{- with .Values.imagePullSecrets }}
-      imagePullSecrets:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-      serviceAccountName: {{ include "ddm-language-server.serviceAccountName" . }}
-      securityContext:
-        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      imagePullPolicy: {{ .Values.image.pullPolicy }}
       containers:
         - name: {{ .Chart.Name }}
-          securityContext:
-            {{- toYaml .Values.securityContext | nindent 12 }}
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
-          {{- if .Values.framework }}
-          {{- if eq .Values.framework "operator-sdk" }}
-          env:
-            - name: WATCH_NAMESPACE
-              valueFrom:
-                fieldRef:
-                  apiVersion: v1
-                  fieldPath: metadata.namespace
-            - name: POD_NAME
-              valueFrom:
-                fieldRef:
-                  apiVersion: v1
-                  fieldPath: metadata.name
-          {{- end}}
-          {{- end}}
+          image: '{{ .Values.image.name }}:{{ .Values.image.version }}'
           ports:
-            - name: http
-              containerPort: 8080
-              protocol: TCP
-{{- if .Values.framework }}
-{{- if ne .Values.framework "operator-sdk" }}
+            - containerPort: {{ .Values.service.port }}
+              name: {{ .Chart.Name }}
           livenessProbe:
-            tcpSocket:
-              port: http
+            httpGet:
+              path: {{ .Values.livenessPath }}
+              port: {{ .Values.service.port }}
+            failureThreshold: 10
+            initialDelaySeconds: 65
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 5
           readinessProbe:
-            tcpSocket:
-              port: http
-{{- end}}
-{{- end}}
+            httpGet:
+              path: {{ .Values.readinessPath }}
+              port: {{ .Values.service.port }}
+            failureThreshold: 10
+            initialDelaySeconds: 65
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 5
           resources:
-            {{- toYaml .Values.resources | nindent 12 }}
-      {{- with .Values.nodeSelector }}
-      nodeSelector:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-      {{- with .Values.affinity }}
-      affinity:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-      {{- with .Values.tolerations }}
-      tolerations:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
+            requests:
+              memory: 1Gi
+      serviceAccountName: {{ .Values.serviceAccount.name }}
