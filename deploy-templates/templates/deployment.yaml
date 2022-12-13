@@ -24,7 +24,7 @@ spec:
       imagePullPolicy: {{ .Values.image.pullPolicy }}
       containers:
         - name: {{ .Chart.Name }}
-          image: '{{ .Values.image.name }}:{{ .Values.image.version }}'
+          image: "{{ .Values.image.name }}:{{ .Values.image.version }}"
           ports:
             - containerPort: {{ .Values.service.port }}
               name: {{ .Chart.Name }}
