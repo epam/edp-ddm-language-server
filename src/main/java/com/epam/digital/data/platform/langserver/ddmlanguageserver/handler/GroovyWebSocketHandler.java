@@ -77,6 +77,6 @@ public class GroovyWebSocketHandler extends TextWebSocketHandler implements SubP
 
   @Override
   public List<String> getSubProtocols() {
-    return Collections.singletonList("com.epam.digital.data.platform.langserver");
+    return Collections.singletonList("subprotocol.demo.websocket");
   }
 }

@@ -78,7 +78,7 @@ class DdmLanguageServerApplicationTests {
 		var subProtocols = groovyWebSocketHandler.getSubProtocols();
 		Assertions.assertThat(subProtocols).isNotNull();
 		Assertions.assertThat(subProtocols).isNotEmpty();
-		Assertions.assertThat(subProtocols.get(0)).isEqualTo("com.epam.digital.data.platform.langserver");
+		Assertions.assertThat(subProtocols.get(0)).isEqualTo("subprotocol.demo.websocket");
 	}
 
 }
