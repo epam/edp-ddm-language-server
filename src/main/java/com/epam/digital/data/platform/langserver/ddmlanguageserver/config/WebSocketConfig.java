@@ -14,7 +14,7 @@ public class WebSocketConfig implements WebSocketConfigurer {
 
   @Override
   public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-    registry.addHandler(webSocketHandler(), "/groovy").setAllowedOriginPatterns("*");
+    registry.addHandler(webSocketHandler(), "/groovy");
   }
 
   @Bean

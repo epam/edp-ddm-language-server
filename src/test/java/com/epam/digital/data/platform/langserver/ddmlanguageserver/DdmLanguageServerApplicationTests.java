@@ -3,7 +3,6 @@ package com.epam.digital.data.platform.langserver.ddmlanguageserver;
 import static org.mockito.ArgumentMatchers.eq;
 
 import com.epam.digital.data.platform.langserver.ddmlanguageserver.handler.GroovyWebSocketHandler;
-import java.util.List;
 import java.util.Map;
 import net.bytebuddy.utility.RandomString;
 import org.assertj.core.api.Assertions;
@@ -78,7 +77,7 @@ class DdmLanguageServerApplicationTests {
 		var subProtocols = groovyWebSocketHandler.getSubProtocols();
 		Assertions.assertThat(subProtocols).isNotNull();
 		Assertions.assertThat(subProtocols).isNotEmpty();
-		Assertions.assertThat(subProtocols.get(0)).isEqualTo("subprotocol.demo.websocket");
+		Assertions.assertThat(subProtocols.get(0)).isEqualTo("com.epam.digital.data.platform.langserver");
 	}
 
 }
