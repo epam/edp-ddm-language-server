@@ -16,22 +16,16 @@
 
 package com.epam.digital.data.platform.langserver.ddmlanguageserver.config;
 
-import com.epam.digital.data.platform.langserver.ddmlanguageserver.handler.GroovyWebSocketHandler;
-import lombok.RequiredArgsConstructor;
+import net.prominic.groovyls.GroovyLanguageServer;
+import org.eclipse.lsp4j.jsonrpc.json.MessageJsonHandler;
+import org.eclipse.lsp4j.jsonrpc.services.ServiceEndpoints;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.socket.config.annotation.EnableWebSocket;
-import org.springframework.web.socket.config.annotation.WebSocketConfigurer;
-import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry;
 
 @Configuration
-@EnableWebSocket
-@RequiredArgsConstructor
-public class WebSocketConfig implements WebSocketConfigurer {
-
-  private final GroovyWebSocketHandler groovyWebSocketHandler;
-
-  @Override
-  public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-    registry.addHandler(groovyWebSocketHandler, "/groovy");
+public class WebSocketHandlerConfig {
+  @Bean
+  public MessageJsonHandler messageJsonHandler(){
+    return new MessageJsonHandler(ServiceEndpoints.getSupportedMethods(GroovyLanguageServer.class));
   }
 }

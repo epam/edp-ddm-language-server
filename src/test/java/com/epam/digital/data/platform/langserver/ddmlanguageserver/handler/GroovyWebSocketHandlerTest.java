@@ -14,11 +14,9 @@
  * limitations under the License.
  */
 
-package com.epam.digital.data.platform.langserver.ddmlanguageserver;
+package com.epam.digital.data.platform.langserver.ddmlanguageserver.handler;
 
-import static org.mockito.ArgumentMatchers.eq;
-
-import com.epam.digital.data.platform.langserver.ddmlanguageserver.handler.GroovyWebSocketHandler;
+import com.epam.digital.data.platform.langserver.ddmlanguageserver.factory.LanguageServerFactory;
 import java.util.Map;
 import net.bytebuddy.utility.RandomString;
 import org.assertj.core.api.Assertions;
@@ -38,12 +36,14 @@ import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 
 @ExtendWith(SpringExtension.class)
-class DdmLanguageServerApplicationTests {
+class GroovyWebSocketHandlerTest {
 
   @Mock
   WebSocketSession session;
   @Mock
   RemoteEndpoint remoteEndpoint;
+  @Mock
+  LanguageServerFactory factory;
   @Mock
   Map<WebSocketSession, RemoteEndpoint> servers;
   @Mock
@@ -54,13 +54,14 @@ class DdmLanguageServerApplicationTests {
   @BeforeEach
   void setup() {
     ReflectionTestUtils.setField(groovyWebSocketHandler, "servers", servers);
-    ReflectionTestUtils.setField(groovyWebSocketHandler, "messageJsonHandler", messageJsonHandler);
   }
 
   @Test
   void afterConnectionEstablishedTest() {
+    Mockito.when(factory.create(session)).thenReturn(remoteEndpoint);
     groovyWebSocketHandler.afterConnectionEstablished(session);
-    Mockito.verify(servers).put(eq(session), Mockito.any(RemoteEndpoint.class));
+    Mockito.verify(factory).create(session);
+    Mockito.verify(servers).put(session, remoteEndpoint);
   }
 
   @Test

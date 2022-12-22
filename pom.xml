@@ -26,6 +26,7 @@
     <sonar.coverage.exclusions>
       **/digital/data/platform/langserver/ddmlanguageserver/config/**,
       **/digital/data/platform/langserver/ddmlanguageserver/exception/**,
+      **/digital/data/platform/langserver/ddmlanguageserver/factory/**,
       **/digital/data/platform/langserver/ddmlanguageserver/DdmLanguageServerApplication.java,
     </sonar.coverage.exclusions>
   </properties>

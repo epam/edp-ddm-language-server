@@ -26,6 +26,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
+import lombok.SneakyThrows;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -47,7 +48,8 @@ public class BaseIT {
   private Integer port;
 
   @Test
-  void hasDiagnosticMessagesTest() throws Exception {
+  @SneakyThrows
+  void hasDiagnosticMessagesTest() {
     var resourceContent = getResourceContent("request-incorrect.json");
     var webSocketClient = new StandardWebSocketClient();
     var errors = new ArrayList<>();
@@ -74,7 +76,8 @@ public class BaseIT {
   }
 
   @Test
-  void emptyDiagnosticMessagesTest() throws Exception {
+  @SneakyThrows
+  void emptyDiagnosticMessagesTest() {
     var resourceContent = getResourceContent("request-correct.json");
     var webSocketClient = new StandardWebSocketClient();
 
@@ -103,7 +106,8 @@ public class BaseIT {
     Thread.sleep(5000);
   }
 
-  public String getResourceContent(String resourcePath) throws Exception {
+  @SneakyThrows
+  public String getResourceContent(String resourcePath)  {
     final var resource = this.getClass().getClassLoader().getResourceAsStream(resourcePath);
     if (Objects.isNull(resource)) {
       final var message = String.format("Resource with path %s doesn't exist", resourcePath);

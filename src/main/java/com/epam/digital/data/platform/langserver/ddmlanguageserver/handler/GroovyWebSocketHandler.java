@@ -16,18 +16,14 @@
 
 package com.epam.digital.data.platform.langserver.ddmlanguageserver.handler;
 
-import com.epam.digital.data.platform.langserver.ddmlanguageserver.exception.WebSocketConnectionException;
-import com.epam.digital.data.platform.langserver.ddmlanguageserver.exception.WebSocketException;
-import java.io.IOException;
+import com.epam.digital.data.platform.langserver.ddmlanguageserver.factory.LanguageServerFactory;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.prominic.groovyls.GroovyLanguageServer;
 import org.eclipse.lsp4j.jsonrpc.RemoteEndpoint;
 import org.eclipse.lsp4j.jsonrpc.json.MessageJsonHandler;
-import org.eclipse.lsp4j.jsonrpc.services.ServiceEndpoints;
-import org.eclipse.lsp4j.services.LanguageClient;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
@@ -38,36 +34,19 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class GroovyWebSocketHandler extends TextWebSocketHandler implements SubProtocolCapable {
 
   private final Map<WebSocketSession, RemoteEndpoint> servers = new ConcurrentHashMap<>();
 
-  private final MessageJsonHandler messageJsonHandler = new MessageJsonHandler(
-      ServiceEndpoints.getSupportedMethods(GroovyLanguageServer.class));
+  private final MessageJsonHandler messageJsonHandler;
+  private final LanguageServerFactory languageServerFactory;
+
 
   @Override
   public void afterConnectionEstablished(@NonNull WebSocketSession session) {
     log.info("Server connection opened");
-    var groovyLanguageServer = new GroovyLanguageServer();
-    var remoteEndpoint = new RemoteEndpoint(message -> {
-      var json = messageJsonHandler.serialize(message);
-      log.trace("Output message: {}", json);
-      try {
-        if (session.isOpen()) {
-          session.sendMessage(new TextMessage(json));
-        } else {
-          log.error("Session is closed");
-          throw new WebSocketConnectionException("Session is closed");
-        }
-      } catch (IOException e) {
-        log.error("Exception occurs during sending message");
-        throw new WebSocketException("Exception occurs during sending message", e);
-      }
-
-    }, ServiceEndpoints.toEndpoint(groovyLanguageServer));
-    var languageClient = ServiceEndpoints.toServiceObject(remoteEndpoint, LanguageClient.class);
-    groovyLanguageServer.connect(languageClient);
-
+    var remoteEndpoint = languageServerFactory.create(session);
     servers.put(session, remoteEndpoint);
   }
 
