@@ -2,7 +2,6 @@ replicaCount: 1
 
 image:
   name: ddm-language-server
-  pullPolicy: IfNotPresent
   version: latest
 
 serviceAccount:

@@ -21,16 +21,16 @@ spec:
       labels:
         app: {{ .Chart.Name }}
     spec:
-      imagePullPolicy: {{ .Values.image.pullPolicy }}
       containers:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image.name }}:{{ .Values.image.version }}"
+          imagePullPolicy: IfNotPresent
           ports:
             - containerPort: {{ .Values.service.port }}
-              name: {{ .Chart.Name }}
+              name: http
           livenessProbe:
             httpGet:
-              path: {{ .Values.livenessPath }}
+              path: {{ .Values.probes.liveness.path }}
               port: {{ .Values.service.port }}
             failureThreshold: 10
             initialDelaySeconds: 65
@@ -39,7 +39,7 @@ spec:
             timeoutSeconds: 5
           readinessProbe:
             httpGet:
-              path: {{ .Values.readinessPath }}
+              path: {{ .Values.probes.readiness.path }}
               port: {{ .Values.service.port }}
             failureThreshold: 10
             initialDelaySeconds: 65
