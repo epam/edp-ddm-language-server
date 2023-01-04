@@ -3,6 +3,7 @@ kind: Service
 metadata:
   name: {{ include "ddm-language-server.fullname" . }}
   labels:
+    app: {{ .Values.name }}
     {{- include "ddm-language-server.labels" . | nindent 4 }}
 spec:
   type: {{ .Values.service.type }}
