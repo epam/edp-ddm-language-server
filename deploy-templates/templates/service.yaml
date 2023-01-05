@@ -13,4 +13,4 @@ spec:
       protocol: TCP
       name: http
   selector:
-    {{- include "ddm-language-server.selectorLabels" . | nindent 4 }}
+    app: {{ .Values.name }}
