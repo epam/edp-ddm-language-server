@@ -1,0 +1,17 @@
+spring:
+  cloud:
+    kubernetes:
+      config:
+        enabled: true
+        enable-api: false
+        paths:
+          - /app/config/application.yml
+---
+spring:
+  config:
+    activate:
+      on-profile: local
+  cloud:
+    kubernetes:
+      config:
+        enabled: false

@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Chart.Name }}
+data:
+  application.yml: |-
+    {{- if eq .Values.deployProfile "dev" }}
+    cors.allowed-origin-patterns: '*'
+    {{- else }}
+    cors.allowed-origin-patterns: 'https://admin-tools*'
+    {{- end }}

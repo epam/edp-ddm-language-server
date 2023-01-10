@@ -49,4 +49,11 @@ spec:
           resources:
             requests:
               memory: 1Gi
+          volumeMounts:
+            - name: {{ .Chart.Name }}
+              mountPath: {{ .Values.appConfigMountPath }}
       serviceAccountName: {{ .Values.serviceAccount.name }}
+      volumes:
+        - name: {{ .Chart.Name }}
+          configMap:
+            name: {{ .Chart.Name }}

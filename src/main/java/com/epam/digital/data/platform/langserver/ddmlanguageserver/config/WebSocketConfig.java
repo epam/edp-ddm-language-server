@@ -18,6 +18,7 @@ package com.epam.digital.data.platform.langserver.ddmlanguageserver.config;
 
 import com.epam.digital.data.platform.langserver.ddmlanguageserver.handler.GroovyWebSocketHandler;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.socket.config.annotation.EnableWebSocket;
 import org.springframework.web.socket.config.annotation.WebSocketConfigurer;
@@ -28,10 +29,14 @@ import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry
 @RequiredArgsConstructor
 public class WebSocketConfig implements WebSocketConfigurer {
 
+  @Value("${cors.allowed-origin-patterns}")
+  private String allowedOriginPatterns;
+
   private final GroovyWebSocketHandler groovyWebSocketHandler;
 
   @Override
   public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-    registry.addHandler(groovyWebSocketHandler, "/groovy");
+    registry.addHandler(groovyWebSocketHandler, "/groovy")
+        .setAllowedOriginPatterns(allowedOriginPatterns);
   }
 }
