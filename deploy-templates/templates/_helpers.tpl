@@ -61,6 +61,14 @@ Create the name of the service account to use
 {{- end }}
 {{- end }}
 
+{{- define "edp.hostnameSuffix" -}}
+{{- printf "%s-%s.%s" .Values.cdPipelineName .Values.cdPipelineStageName .Values.dnsWildcard }}
+{{- end }}
+
+{{- define "admin-tools.url" -}}
+{{- $root := .root }}
+{{- printf "%s%s-%s" "https://" "admin-tools" (include "edp.hostnameSuffix" $root ) }}
+{{- end }}
 
 {{- define "keycloak.url" -}}
 {{- printf "%s%s" "https://" .Values.keycloak.host }}

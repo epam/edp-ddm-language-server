@@ -25,5 +25,13 @@ keycloak:
     admin: admin
   certificatesEndpoint: /protocol/openid-connect/certs
 
-deployProfile: prod
+global:
+  deploymentMode: development
+
 appConfigMountPath: "/app/config"
+
+############## EDP VARIABLES TEST VALUES ##############################
+namespace: ns
+cdPipelineName: pipe
+cdPipelineStageName: dev
+dnsWildcard: edp-epam.com

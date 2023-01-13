@@ -4,8 +4,8 @@ metadata:
   name: {{ .Chart.Name }}
 data:
   application.yml: |-
-    {{- if eq .Values.deployProfile "dev" }}
-    cors.allowed-origin-patterns: '*'
+    {{- if eq .Values.global.deploymentMode "production" }}
+    cors.allowed-origin-patterns: '{{- include "admin-tools.url" (dict "root" $) }}'
     {{- else }}
-    cors.allowed-origin-patterns: 'https://admin-tools*'
+    cors.allowed-origin-patterns: '*'
     {{- end }}
