@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 EPAM Systems.
+ * Copyright 2023 EPAM Systems.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,12 +31,12 @@ import org.springframework.web.socket.WebSocketSession;
 @RequiredArgsConstructor
 public class GroovyLangServerFactory implements LanguageServerFactory {
 
-  private final MessageJsonHandler messageJsonHandler;
+  private final MessageJsonHandler groovyMessageJsonHandler;
 
   @Override
   public RemoteEndpoint create(@NonNull WebSocketSession session) {
     var groovyLanguageServer = new GroovyLanguageServer();
-    var remoteEndpoint = new RemoteEndpoint(new LSMessageConsumer(session, messageJsonHandler),
+    var remoteEndpoint = new RemoteEndpoint(new LSMessageConsumer(session, groovyMessageJsonHandler),
         ServiceEndpoints.toEndpoint(groovyLanguageServer));
     var languageClient = ServiceEndpoints.toServiceObject(remoteEndpoint, LanguageClient.class);
     groovyLanguageServer.connect(languageClient);

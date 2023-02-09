@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 EPAM Systems.
+ * Copyright 2023 EPAM Systems.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
 
 package com.epam.digital.data.platform.langserver.ddmlanguageserver.config;
 
-import com.epam.digital.data.platform.langserver.ddmlanguageserver.handler.GroovyWebSocketHandler;
+import com.epam.digital.data.platform.langserver.ddmlanguageserver.handler.WebSocketHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
@@ -32,11 +32,15 @@ public class WebSocketConfig implements WebSocketConfigurer {
   @Value("${cors.allowed-origin-patterns}")
   private String allowedOriginPatterns;
 
-  private final GroovyWebSocketHandler groovyWebSocketHandler;
+  private final WebSocketHandler groovyWebSocketHandler;
+  private final WebSocketHandler xmlWebSocketHandler;
 
   @Override
   public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
     registry.addHandler(groovyWebSocketHandler, "/groovy")
+        .setAllowedOriginPatterns(allowedOriginPatterns);
+
+    registry.addHandler(xmlWebSocketHandler, "/xml")
         .setAllowedOriginPatterns(allowedOriginPatterns);
   }
 }

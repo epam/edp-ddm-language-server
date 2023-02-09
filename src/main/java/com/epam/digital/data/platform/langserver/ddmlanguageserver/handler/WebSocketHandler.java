@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 EPAM Systems.
+ * Copyright 2023 EPAM Systems.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,8 +24,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.eclipse.lsp4j.jsonrpc.RemoteEndpoint;
 import org.eclipse.lsp4j.jsonrpc.json.MessageJsonHandler;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.lang.NonNull;
-import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.SubProtocolCapable;
 import org.springframework.web.socket.TextMessage;
@@ -33,19 +33,21 @@ import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 @Slf4j
-@Component
 @RequiredArgsConstructor
-public class GroovyWebSocketHandler extends TextWebSocketHandler implements SubProtocolCapable {
+public class WebSocketHandler extends TextWebSocketHandler implements SubProtocolCapable {
 
   private final Map<WebSocketSession, RemoteEndpoint> servers = new ConcurrentHashMap<>();
+
+  @Value("${socket.message-size}")
+  private int messageSize;
 
   private final MessageJsonHandler messageJsonHandler;
   private final LanguageServerFactory languageServerFactory;
 
-
   @Override
   public void afterConnectionEstablished(@NonNull WebSocketSession session) {
     log.info("Server connection opened");
+    session.setTextMessageSizeLimit(messageSize);
     var remoteEndpoint = languageServerFactory.create(session);
     servers.put(session, remoteEndpoint);
   }

@@ -9,3 +9,4 @@ data:
     {{- else }}
     cors.allowed-origin-patterns: '*'
     {{- end }}
+    socket.message-size: 30000

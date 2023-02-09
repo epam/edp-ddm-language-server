@@ -16,24 +16,23 @@
 
 package com.epam.digital.data.platform.langserver.ddmlanguageserver.config;
 
-import com.epam.digital.data.platform.langserver.ddmlanguageserver.factory.LanguageServerFactory;
-import com.epam.digital.data.platform.langserver.ddmlanguageserver.handler.WebSocketHandler;
+import net.prominic.groovyls.GroovyLanguageServer;
+import org.eclipse.lemminx.XMLLanguageServer;
 import org.eclipse.lsp4j.jsonrpc.json.MessageJsonHandler;
+import org.eclipse.lsp4j.jsonrpc.services.ServiceEndpoints;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class WebSocketHandlerConfig {
+public class MessageHandlerConfig {
 
   @Bean
-  public WebSocketHandler groovyWebSocketHandler(MessageJsonHandler groovyMessageJsonHandler,
-      LanguageServerFactory groovyLangServerFactory) {
-    return new WebSocketHandler(groovyMessageJsonHandler, groovyLangServerFactory);
+  public MessageJsonHandler groovyMessageJsonHandler() {
+    return new MessageJsonHandler(ServiceEndpoints.getSupportedMethods(GroovyLanguageServer.class));
   }
 
   @Bean
-  public WebSocketHandler xmlWebSocketHandler(MessageJsonHandler xmlMessageJsonHandler,
-      LanguageServerFactory xmlLangServerFactory) {
-    return new WebSocketHandler(xmlMessageJsonHandler, xmlLangServerFactory);
+  public MessageJsonHandler xmlMessageJsonHandler() {
+    return new MessageJsonHandler(ServiceEndpoints.getSupportedMethods(XMLLanguageServer.class));
   }
 }
