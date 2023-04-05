@@ -6,6 +6,9 @@ spring:
         enable-api: false
         paths:
           - /app/config/application.yml
+
+logging:
+  config: classpath:log4j2-json-console.xml
 ---
 spring:
   config:
