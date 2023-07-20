@@ -20,6 +20,7 @@
 
     <ddm-starter-logger.version>1.6.0.1</ddm-starter-logger.version>
     <ddm-starter-actuator.version>1.6.0.1</ddm-starter-actuator.version>
+	<log4j.version>2.19.0</log4j.version>
 
     <maven-surefire-plugin.version>2.22.2</maven-surefire-plugin.version>
     <maven-failsafe-plugin.version>2.22.2</maven-failsafe-plugin.version>
@@ -98,6 +99,16 @@
         </exclusion>
       </exclusions>
     </dependency>
+	<dependency>
+      <groupId>org.apache.logging.log4j</groupId>
+      <artifactId>log4j-api</artifactId>
+      <version>${log4j.version}</version>
+	</dependency>
+	<dependency>
+      <groupId>org.apache.logging.log4j</groupId>
+      <artifactId>log4j-core</artifactId>
+      <version>${log4j.version}</version>
+	</dependency>
 
     <dependency>
       <groupId>org.springframework.boot</groupId>
