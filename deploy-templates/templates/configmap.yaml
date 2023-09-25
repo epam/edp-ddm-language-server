@@ -6,7 +6,9 @@ data:
   application.yml: |-
     {{- if eq .Values.global.deploymentMode "production" }}
     cors.allowed-origin-patterns: '{{- include "admin-tools.url" (dict "root" $) }}'
+    management.endpoints.web.exposure.include: 'health, prometheus'
     {{- else }}
     cors.allowed-origin-patterns: '*'
+    management.endpoints.web.exposure.include: '*'
     {{- end }}
     socket.message-size: 30000
