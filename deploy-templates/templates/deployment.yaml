@@ -16,8 +16,17 @@ spec:
     type: RollingUpdate
   template:
     metadata:
+      {{- if or .Values.podAnnotations .Values.global.registry.ddmLanguageServer.istio.sidecar.enabled }}
       annotations:
+        {{- if .Values.global.registry.ddmLanguageServer.istio.sidecar.enabled }}
         sidecar.istio.io/inject: "true"
+        {{- if .Values.global.istio.sidecar.requestsLimitsEnabled }}
+        {{- include "ddmLanguageServer.istioResources" . | nindent 8 }}
+        {{- else }}
+        inject.istio.io/templates: 'sidecar,emptyRequestsLimits'
+        {{- end }}
+        {{- end }}
+      {{- end }}
       labels:
         app: {{ .Chart.Name }}
         collect.logs: "json"
@@ -33,6 +42,9 @@ spec:
             httpGet:
               path: {{ .Values.probes.liveness.path }}
               port: {{ .Values.service.port }}
+              httpHeaders:
+                - name: X-B3-Sampled
+                  value: "0"
             failureThreshold: 10
             initialDelaySeconds: 65
             periodSeconds: 10
@@ -42,14 +54,23 @@ spec:
             httpGet:
               path: {{ .Values.probes.readiness.path }}
               port: {{ .Values.service.port }}
+              httpHeaders:
+                - name: X-B3-Sampled
+                  value: "0"
             failureThreshold: 10
             initialDelaySeconds: 65
             periodSeconds: 10
             successThreshold: 1
             timeoutSeconds: 5
+          {{- if .Values.global.container.requestsLimitsEnabled }}
           resources:
-            requests:
-              memory: 1Gi
+            {{- toYaml .Values.global.registry.ddmLanguageServer.container.resources | nindent 12 }}
+          {{- end }}
+          env:
+            {{- range $name, $value := .Values.global.registry.ddmLanguageServer.container.envVars }}
+            - name: {{ $name }}
+              value: {{ $value | quote }}
+            {{- end }}
           volumeMounts:
             - name: {{ .Chart.Name }}
               mountPath: {{ .Values.appConfigMountPath }}
