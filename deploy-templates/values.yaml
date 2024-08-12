@@ -35,3 +35,8 @@ namespace: ns
 cdPipelineName: pipe
 cdPipelineStageName: dev
 dnsWildcard: edp-epam.com
+
+monitoring:
+  namespace: openshift-monitoring
+  prometheusScrapePath: /actuator/prometheus
+  jobLabel: app
